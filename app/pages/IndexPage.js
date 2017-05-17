@@ -1,4 +1,4 @@
-
+const renderIndex = require('../renderers/indexRenderer');
 
 module.exports = class IndexPage {
   constructor(root){
@@ -7,8 +7,19 @@ module.exports = class IndexPage {
 
 
   render() {
-    // $(this._root).html(renderIndexPage());
-    // $(this._root).find('form').submit(this._handleSearch);
+    $(this._root).html(renderIndex());
+    $(this._root).find('#team-submit-form').submit(this._fetchTeamData);
+  }
+
+
+
+
+  _fetchTeamData(event){
+    event.preventDefault();
+
+    var team = $('#team-select').val();
+    // window.location.href = '...';
+    console.log(team);
   }
 
 } //END Class
