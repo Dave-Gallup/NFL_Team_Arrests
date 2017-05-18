@@ -1,5 +1,6 @@
 const renderIndex = require('../renderers/indexrenderer');
 const renderTeamPage = require('../renderers/teamrenderer');
+const renderAllPage = require('../renderers/allrenderer');
 const renderPlayerPage = require('../renderers/playerrenderer');
 const ArrestFormatter = require('../data/arrestformatter');
 const TeamFormatter = require('../data/teamformatter');
@@ -15,6 +16,7 @@ module.exports = class IndexPage {
   render() {
     $(this._root).html(renderIndex(TeamFormatter.teamNames()));
     $(this._root).find('#team-submit-form').submit(this._fetchTeamData.bind(this));
+    $(this._root).find('.nfl').click(this._fetchAllNflArrests.bind(this));
   }
 
   _fetchTeamData(event){
@@ -28,6 +30,25 @@ module.exports = class IndexPage {
     var subdirs=['team', 'arrests', team];
     var queries={};
     this._fetchData(subdirs, queries);
+  }
+
+  _fetchAllNflArrests(event){
+    event.preventDefault();
+    $('#root').empty().html(renderAllPage());
+
+    var idArray = Object.keys(TeamFormatter.teamNames());
+
+    var responses = idArray.map(id=>fetch(`${this._nflArrest}team/arrests/${id}`));
+
+    Promise.all(responses)
+      .then(returned => returned.map(el=>el.json()))
+      .then(formatted=>Promise.all(formatted))
+      .then(arrests=>ArrestFormatter.isMultipleTeams(arrests));
+
+
+
+
+
   }
 
 
@@ -49,8 +70,8 @@ module.exports = class IndexPage {
       // .then(arrests => toDisplay(arrests[0].Category));
       .then(arrests => {
         c3.generate(
-          ArrestFormatter.formatForLineChart(
-            arrests, '#team-line-chart')
+          ArrestFormatter.formatForTeamChart(
+            arrests, '#team-line-chart', 'bar')
         );
         c3.generate(
           ArrestFormatter.formatForDonutChart(

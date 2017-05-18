@@ -9,7 +9,7 @@ module.exports = function renderIndex(teams){
   return `<nav class="uk-navbar">
   <ul class="uk-navbar-nav">
       <li class="uk-active"><a href="">Home</a></li>
-      <li><a href="">All NFL</a></li>
+      <li class='nfl'><a href="">All NFL</a></li>
   </ul>
 </nav>
 <h1 id='pageHeader' class="uk-text-center">Select a team</h1>

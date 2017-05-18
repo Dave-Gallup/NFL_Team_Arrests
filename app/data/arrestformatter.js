@@ -40,48 +40,84 @@ module.exports = class ArrestFormatter{
   }
 
 
-  static formatForLineChart(data, chartId){
+  static formatForTeamChart(data, chartId, chartType){
 
-    var result = {bindto: chartId ,data: {x: 'x', columns: [],type: 'bar'}};
-    var arrestColumns = ['arrests'];
-    var xColumns = ['x'];
-    var years = ArrestFormatter.countInstancesByKey(data, 'Year', true);
+    var dataMaster = [];
+    if(ArrestFormatter.isMultipleTeams(data)){
+      dataMaster = data;
+    }
+    else{
+      dataMaster.push(data);
+    }
 
-    result.data.columns[0] = xColumns.concat(Object.keys(years));
-    result.data.columns[1] = arrestColumns.concat(Object.values(years));
+    var result = {bindto: chartId ,data: {x: 'x', columns: [],type: chartType}};
+
+    var yearsSet = ArrestFormatter.makeClearObject(dataMaster, 'Year', true);
+
+    result.data.columns[0] = ['x'].concat(Object.keys(yearsSet));
+
+    for(let i = 0; i < dataMaster.length; i++){
+
+      var singleTeamStats =
+        ArrestFormatter.countInstancesByKey(dataMaster[i], yearsSet, 'Year');
+      result.data.columns[i+1] =
+        [dataMaster[i].Team_preffered_name].concat(Object.values(singleTeamStats));
+    }
 
     return result;
   }
 
-  static countInstancesByKey(data, key, isSequential){
-    var countObj = {};
+  static makeClearObject(data, key, isSequential){
+    var newObject = {};
     var minVal = Infinity;
     var maxVal = -Infinity;
+    var dataMaster = [];
 
-    for(let arrest of data){
-      let val = arrest[key];
-      if(countObj[val] === undefined){
-        countObj[val] = 1;
-      }
-      else{
-        countObj[val]++;
-      }
-      if(val > maxVal){
-        maxVal = val;
-      }
-      if(val < minVal){
-        minVal = val;
+    if(ArrestFormatter.isMultipleTeams(data)){
+      dataMaster = data;
+    }
+    else{
+      dataMaster.push(data);
+    }
+
+    for(let i = 0; i < dataMaster.length; i++){
+      for(let arrest of dataMaster[i]){
+        newObject[arrest[key]] = 0;
+
+        if(arrest[key] > maxVal){
+          maxVal = arrest[key];
+        }
+        if(arrest[key] < minVal){
+          minVal = arrest[key];
+        }
       }
     }
 
     if(isSequential){
       for(let n = minVal; n <= maxVal; n++){
-        if(countObj[n] === undefined){
-          countObj[n] = 0;
+        if(newObject[n] === undefined){
+          newObject[n] = 0;
         }
       }
     }
-    return countObj;
+    return newObject;
+  }
+
+  static countInstancesByKey(data, clearSet, key){
+
+    for(let arrest in data){
+      clearSet[arrest[key]]++;
+    }
+
+    return clearSet;
+  }
+
+  static isMultipleTeams(data){
+
+
+    return data[0] !== undefined && Array.isArray(data[0]);
+
+
   }
 
 
