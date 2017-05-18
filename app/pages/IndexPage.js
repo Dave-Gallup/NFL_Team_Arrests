@@ -5,6 +5,7 @@ const renderAllPage = require('../renderers/allrenderer');
 const ArrestFormatter = require('../data/arrestformatter');
 const TeamFormatter = require('../data/teamformatter');
 const PlayerFormatter = require('../data/playerformatter');
+const AllFormatter = require('../data/allformatter');
 
 module.exports = class IndexPage {
   constructor(root){
@@ -41,10 +42,15 @@ module.exports = class IndexPage {
 
     var responses = idArray.map(id=>fetch(`${this._nflArrest}team/arrests/${id}`));
 
-    Promise.all(responses)
+    var p = Promise.all(responses)
       .then(returned => returned.map(el=>el.json()))
       .then(formatted=>Promise.all(formatted))
-      .then(console.log);
+      .then(arrests => {
+        c3.generate(
+          AllFormatter.formatForLineChart(arrests, '#all-teams-line-chart'))
+      });
+      // .then(console.log);
+
 
 
 
