@@ -26,7 +26,7 @@ module.exports = class IndexPage {
     var teams = TeamFormatter.teamNames();
     var team = $('#team-select').val();
 
-    $('#root').empty().html(renderTeamPage(`${teams[team].city} ${teams[team].name}`));
+    $('#root').empty().html(renderTeamPage(`${teams[team].city} ${teams[team].name}`, team));
 
     var subdirs=['team', 'arrests', team];
     var queries={};
@@ -92,7 +92,7 @@ module.exports = class IndexPage {
       fetch(`http://nflarrest.com/api/v1/player/arrests/${uriFormattedName}`)
         .then(response => response.json())
         .then(arrests => {
-          $('#player-arrests-list').html(
+          $('#arrest-details').html(
             PlayerFormatter.formatPlayerArrests(arrests)
           );
         })
