@@ -17,7 +17,7 @@ module.exports = class IndexPage {
   render() {
     //$(this._root).html(renderIndex(TeamFormatter.teamNames()));
     $(this._root).find('#team-submit-form').submit(this._fetchTeamData.bind(this));
-    $(this._root).find('.nfl').click(this._fetchAllNflArrests.bind(this));
+    $('.nfl').click(this._fetchAllNflArrests.bind(this));
   }
 
   _fetchTeamData(event){

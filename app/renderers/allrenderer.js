@@ -1,11 +1,15 @@
 module.exports = function renderAllTeams(){
 
-  return `<h3 id='pageHeader' class='uk-text-center'>All NFL Arrests By Team</h3>
-
-<div class="uk-container uk-container-center">
-  <div class='uk-text-center'>
-    <div id="all-teams-line-chart"></div>
-  </div>
-
-</div>`;
+  return `<div class="container">
+    <h3 id='pageHeader' class='center-align'>All NFL Arrests By Team</h3>
+    <div class='row'>
+      <div class='col s1'>
+      </div>
+      <div class='col s10'>
+          <div id="all-teams-line-chart"></div>
+      </div>
+      <div class='col s1'>
+      </div>
+    </div>
+  </div>`;
 }
