@@ -15,7 +15,7 @@ module.exports = class IndexPage {
 
 
   render() {
-    $(this._root).html(renderIndex(TeamFormatter.teamNames()));
+    //$(this._root).html(renderIndex(TeamFormatter.teamNames()));
     $(this._root).find('#team-submit-form').submit(this._fetchTeamData.bind(this));
     $(this._root).find('.nfl').click(this._fetchAllNflArrests.bind(this));
   }
@@ -27,7 +27,6 @@ module.exports = class IndexPage {
     var team = $('#team-select').val();
 
     $('#root').empty().html(renderTeamPage(`${teams[team].city} ${teams[team].name}`));
-    //$('#root').find('.nfl').click(this._fetchAllNflArrests.bind(this));
 
     var subdirs=['team', 'arrests', team];
     var queries={};
@@ -49,13 +48,6 @@ module.exports = class IndexPage {
         c3.generate(
           AllFormatter.formatForLineChart(arrests, '#all-teams-line-chart'))
       });
-      // .then(console.log);
-
-
-
-
-
-
   }
 
    _fetchData(subdirectoryArr, queryStringObj){
@@ -70,10 +62,9 @@ module.exports = class IndexPage {
     for(let key in queryStringObj){
       queryString += `${key}=${queryStringObj[key]}&`;
     }
-    // console.log(`${this._nflArrest}${subdirectoryString}${queryString}`);
+
     fetch(`${this._nflArrest}${subdirectoryString}${queryString}`)
       .then(response => response.json())
-      // .then(arrests => toDisplay(arrests[0].Category));
       .then(arrests => {
         c3.generate(
           ArrestFormatter.formatForLineChart(
@@ -97,17 +88,14 @@ module.exports = class IndexPage {
       var uriFormattedName = $(this).html().trim().replace(/\s/g, '%20');
 
       $('#root').empty().html(renderPlayerPage(uriFormattedName));
+      $('#root').find('.nfl').click(this._fetchAllNflArrests);
       fetch(`http://nflarrest.com/api/v1/player/arrests/${uriFormattedName}`)
         .then(response => response.json())
         .then(arrests => {
-          //console.log(arrests);
-
           $('#player-arrests-list').html(
             PlayerFormatter.formatPlayerArrests(arrests)
           );
         })
-
-
 
   }
 
