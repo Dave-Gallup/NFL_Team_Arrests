@@ -18,6 +18,13 @@ module.exports = class IndexPage {
     //$(this._root).html(renderIndex(TeamFormatter.teamNames()));
     $(this._root).find('#team-submit-form').submit(this._fetchTeamData.bind(this));
     $('.nfl').click(this._fetchAllNflArrests.bind(this));
+    $('#team-select').change(this._setIcon.bind(this));
+  }
+
+  _setIcon(event){
+
+    var logoNum = $('#team-select').find(':selected').attr('id');
+    $('.carousel').carousel('set', logoNum - 1);
   }
 
   _fetchTeamData(event){
