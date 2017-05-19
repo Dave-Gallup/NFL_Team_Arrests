@@ -19,6 +19,12 @@ module.exports = class IndexPage {
     $(this._root).find('#team-submit-form').submit(this._fetchTeamData.bind(this));
     $('.nfl').click(this._fetchAllNflArrests.bind(this));
     $('#team-select').change(this._setIcon.bind(this));
+    // $('#logo-carousel').click(this._setSelect.bind(this));
+  }
+
+  _setSelect(event){
+
+    console.log($('#logo-carousel').find('.active').attr('id'));
   }
 
   _setIcon(event){
